@@ -59,6 +59,7 @@ void FreeIntVec(IntVec v);
 void ShowIntVec(IntVec v);
 void WriteIntVec(FILE* f, IntVec v);	/*将一个向量储存到文件f中*/
 void ZeroIntVec(IntVec v);
+void CopyIntVec(IntVec v1, IntVec v2);
 
 /*------------------SVector------------------*/
 /*------------------double型共享向量------------------*/

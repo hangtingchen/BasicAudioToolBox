@@ -77,6 +77,24 @@ void unpad_signal(Vector * yP, Vector x, int res, int target_sz)
 	for (i = 1; i <= VectorSize(*yP); i++)(*yP)[i] = x[i];
 }
 
+Matrix frameRawSignal(IntVec v, int wlen, int inc)
+{
+	int numSamples = VectorSize(v);
+	int numFrames = (numSamples - (wlen - inc)) / inc;
+	Matrix m = NULL; int i = 0, j = 0, pos = 1;
+
+	if ((numSamples - (inc - wlen)) % inc != 0)numFrames++;
+	m = CreateMatrix(numFrames, wlen);
+	for (i = 1; i <= numFrames; i++) {
+		pos = (i - 1)*inc + 1;
+		for (j = 1; j <= wlen; j++,pos++) {
+			if (pos > numSamples)m[i][j] = 0.0;
+			else m[i][j] = (double)v[pos];
+		}
+	}
+	return m;
+}
+
 /*FFT from HTK*/
 /* EXPORT-> FFT: apply fft/invfft to complex s */
 /*
@@ -184,7 +202,7 @@ void ZeroMean(IntVec data)
 double zeroCrossingRate(Vector s, int frameSize) {
 	int count = 0; int i;
 	for (i = 1; i < frameSize; i++)  if ((s[i] * s[i + 1]) < 0.0)count++;
-	return ((double)count) / (double)(frameSize - 1);
+	return (double)count / (double)(frameSize - 1);
 }
 
 /* EXPORT->PreEmphasise: pre-emphasise signal in s */

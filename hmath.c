@@ -103,6 +103,14 @@ void ZeroIntVec(IntVec v)
 	for (i = 1; i <= n; i++) v[i] = 0;
 }
 
+void CopyIntVec(IntVec v1, IntVec v2)
+{
+	int i = 0;
+	if (VectorSize(v1) > VectorSize(v2)) { printf("v1 and v2 size dismatch when copying vector and size(v1)>size(v2)\n"); 	system("pause"); exit(-1); }
+	if (VectorSize(v1) != VectorSize(v2))printf("v1 and v2 size dismatch. If you do it on purpose, ignore this warning\n");
+	for (i = 1; i <= VectorSize(v1); i++)v2[i] = v1[i];
+}
+
 //IntMat
 
 IntMat CreateIntMat(int nrows, int ncols)

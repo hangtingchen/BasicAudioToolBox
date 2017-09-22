@@ -18,7 +18,10 @@ int find(Vector v, double thre, int FrontOrEndFlag);
 void pad_signal(Vector* yP, Vector x, int Npad);
 void unpad_signal(Vector* yP, Vector x, int res, int target_sz );
 
+/*frame the origin int signal according to frame size and frame shift size*/
+/*return a double matrix,each row contains a frame*/
 Matrix frameRawSignal(IntVec v, int wlen, int inc);
+
 
 void FFT(Vector s, int invert);
 /*

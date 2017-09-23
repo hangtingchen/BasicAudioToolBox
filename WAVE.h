@@ -86,6 +86,9 @@ void print_WAVE(WAVE_t w);
 /*释放WAVE*/
 void free_WAVE(WAVE_t* w);
 
+/*写入WAVE文件*/
+void writeWaveFile(FILE* f, WAVEParams_t params, IntMat m);
+
 #ifdef _cplusplus
 }
 #endif // _cplusplus

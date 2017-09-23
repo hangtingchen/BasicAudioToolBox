@@ -13,7 +13,7 @@ WAVE_t initWAVE_t()
 	return w;
 }
 
-//warning:reead only non-negtive int
+//warning:read only non-negtive int
 long int readWAVE(FILE * f, size_t sizeInByte, int EndianFlag)
 {
 	char* p = NULL; int i = 0; long int x = 0;
@@ -111,4 +111,68 @@ void free_WAVE(WAVE_t * w)
 {
 	FreeMatrix(w->DATA.data);
 	*w = initWAVE_t();
+}
+
+void writeWaveFile(FILE * f, WAVEParams_t params, IntMat m)
+{
+	int i = 0, j = 0, t = 0; int pad_byte = 0; unsigned char* p = NULL; int sign = 0; int int_temp = 0;
+	WAVE_t w = initWAVE_t();
+	char RIFF_ckID[4] = { 'R','I','F','F' };
+	char WAVEID[4] = { 'W','A','V','E' };
+	char fmt_ckID[4] = { 'f','m','t','\x20' };
+	char DATA_ckID[4] = { 'd','a','t','a' };
+
+	w.WAVEParams = params;
+	for (i = 0; i < 4; i++) {
+		w.RIFF.ckID[i] = RIFF_ckID[i];
+		w.RIFF.WAVEID[i] = WAVEID[i];
+		w.fmt.ckID[i] = fmt_ckID[i];
+		w.DATA.ckID[i] = DATA_ckID[i];
+	}
+	w.RIFF.cksize = 36 + params.containerLengthInByte*params.numChannels*params.numSamples;
+	if (w.RIFF.cksize % 2) { w.RIFF.cksize++; pad_byte = 1; }
+	w.fmt.cksize = 16;
+	w.fmt.wFormatTag = 0x0001;
+	w.fmt.nChannels = params.numChannels;
+	w.fmt.nSamplesPerSec = params.sampleRate;
+	w.fmt.nAvgBytesPerSec = params.sampleRate*params.containerLengthInByte*params.numChannels;
+	w.fmt.nBlockAlign = params.containerLengthInByte*params.numChannels;
+	w.fmt.wBitsPerSample = params.sampleLengthInByte * 8;
+	w.DATA.cksize = w.RIFF.cksize - 36 - pad_byte;
+
+	//RIFF chunk
+	fwrite(w.RIFF.ckID, 4, 1, f);
+	fwrite(&w.RIFF.cksize, sizeof(uint32_t), 1, f);
+	fwrite(&w.RIFF.WAVEID, 4, 1, f);
+	//fmt chunk
+	fwrite(w.fmt.ckID, 4, 1, f);
+	fwrite(&w.fmt.cksize, sizeof(uint32_t), 1, f);
+	fwrite(&w.fmt.wFormatTag, sizeof(uint16_t), 1, f);
+	fwrite(&w.fmt.nChannels, sizeof(uint16_t), 1, f);
+	fwrite(&w.fmt.nSamplesPerSec, sizeof(uint32_t), 1, f);
+	fwrite(&w.fmt.nAvgBytesPerSec, sizeof(uint32_t), 1, f);
+	fwrite(&w.fmt.nBlockAlign, sizeof(uint16_t), 1, f);
+	fwrite(&w.fmt.wBitsPerSample, sizeof(uint16_t), 1, f);
+	//data chunk
+	fwrite(w.DATA.ckID, 4, 1, f);
+	fwrite(&w.DATA.cksize, sizeof(uint32_t), 1, f);
+
+	if ((NumRows(m) != params.numChannels) || (NumCols(m) != params.numSamples)) { printf("The size of int matrix does not match wave params\n"); exit(-1); }
+	p = (unsigned char*)malloc(sizeof(unsigned char)*w.WAVEParams.containerLengthInByte);
+	for (i = 1; i <= params.numSamples; i++)
+		for (j = 1; j <= params.numChannels; j++) {
+			sign = m[j][i] >= 0 ? 1 : -1;
+			int_temp = sign > 0 ? m[j][i] :  - m[j][i];
+			memcpy(p, &int_temp, params.containerLengthInByte);
+			if (sign == -1) { for (t = 0; t < params.containerLengthInByte; t++)p[t] = ~p[t]; }
+	//		if (sign == -1)p[0] += 1;
+			if (sign == -1) { for (t = 0; t < params.containerLengthInByte; t++) { p[t] += 1; if (p[t] != 0)break; } }
+			fwrite(p, params.containerLengthInByte, 1, f);
+		}
+	if (pad_byte) {
+		p[0] = 0;
+		fwrite(p, 1, 1, f);
+	}
+	free(p);
+
 }

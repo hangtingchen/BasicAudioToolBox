@@ -16,7 +16,7 @@ A basic audio toolbox for signal processing and statistic models
 ## 使用
 ### hmath
 #### 向量的创建、复制、打印、输出、解析
-```
+```C
 //VectorSize函数的输入可以用任何向量类型，包括IntVec
 printf("v0\n"); 
 IntVec v0 = CreateIntVec(4); 
@@ -38,7 +38,7 @@ WriteVectorE(ftemp,v2);
 FreeIntVec(v0); FreeVector(v1); FreeVector(v2);
 ```
 #### 矩阵的创建、复制、打印、输出、解析
-```
+```C
 //NumRows和NumCols的输入可以是除了STriMat外的矩阵，包括IntMat
 printf("m0\n"); 
 IntMat m0 = CreateIntMat(2, 2); 
@@ -83,7 +83,7 @@ FreeSTriMat(sm2); FreeMatrix(m3);
 ```
 
 ### FFT
-```
+```C
 printf("v3\n"); 
 Vector v3 = CreateVector(8); 
 //fft的序列为[1,2,3,4],但要储存为[1,0,2,0,3,0,4,0]，也就是实部和虚部分开储存
@@ -96,7 +96,7 @@ FreeVector(v3); FreeXFFT(&xf);
 ```
 
 ### WAVE
-```
+```C
 //load WAVE file to IntMat
 FILE* f2=NULL;FILE* f=NULL;
 WAVE_t w = initWAVE_t();

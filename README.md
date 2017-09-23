@@ -62,7 +62,7 @@ FreeIntMat(m0); FreeMatrix(m1); FreeMatrix(m2);
 ```
 
 #### 下三角矩阵和求逆
-```
+```C
 printf("sm1\n"); 
 STriMat sm1 = CreateSTriMat(2); 
 for (int i = 1; i <= STriMatSize(sm1); i++)for (int j = 1; j <= i; j++)sm1[i][j] = i==j?(double)(i + j):(double)(i-j); 

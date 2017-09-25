@@ -77,11 +77,22 @@ void unpad_signal(Vector * yP, Vector x, int res, int target_sz)
 	for (i = 1; i <= VectorSize(*yP); i++)(*yP)[i] = x[i];
 }
 
-Matrix frameRawSignal(IntVec v, int wlen, int inc)
+Matrix frameRawSignal(IntVec v, int wlen, int inc, double preEmphasiseCoefft, int enableHamWindow)
 {
 	int numSamples = VectorSize(v);
 	int numFrames = (numSamples - (wlen - inc)) / inc;
-	Matrix m = NULL; int i = 0, j = 0, pos = 1;
+	Matrix m = NULL; 
+	Vector v1 = NULL; Vector HamWindow = NULL;
+	int i = 0, j = 0, pos = 1; double a = 0;
+
+	v1 = CreateVector(numSamples);
+	for (i = 1; i <= numSamples; i++)v1[i] = (double)v[i];
+	PreEmphasise(v1, preEmphasiseCoefft);
+
+	HamWindow = CreateVector(wlen);
+	a = 2 * pi / (wlen - 1);
+	if(enableHamWindow)for (i = 1; i <= wlen; i++)HamWindow[i] = 0.54 - 0.46 * cos(a*(i - 1));
+	else for (i = 1; i <= wlen; i++)HamWindow[i] = 1.0;
 
 	if ((numSamples - (inc - wlen)) % inc != 0)numFrames++;
 	m = CreateMatrix(numFrames, wlen);
@@ -89,9 +100,10 @@ Matrix frameRawSignal(IntVec v, int wlen, int inc)
 		pos = (i - 1)*inc + 1;
 		for (j = 1; j <= wlen; j++,pos++) {
 			if (pos > numSamples)m[i][j] = 0.0;
-			else m[i][j] = (double)v[pos];
+			else m[i][j] = (double)v1[pos]*HamWindow[j];
 		}
 	}
+	FreeVector(v1); FreeVector(HamWindow);
 	return m;
 }
 

@@ -254,7 +254,7 @@ void calSubBankE(Vector fftx, Vector subBankEnergy)
 
 }
 
-void Regress(Vector data, int vSize, int n, int step, int offset, int delwin, int head, int tail, bool simpleDiffs)
+void Regress(double* data, int vSize, int n, int step, int offset, int delwin, int head, int tail, bool simpleDiffs)
 {
 	double *fp, *fp1, *fp2, *back, *forw;
 	double sum, sigmaT2;
@@ -264,7 +264,7 @@ void Regress(Vector data, int vSize, int n, int step, int offset, int delwin, in
 	for (t = 1; t <= delwin; t++)
 		sigmaT2 += t*t;
 	sigmaT2 *= 2.0;
-	fp = &data[1];
+	fp = data;
 	for (i = 1; i <= n; i++) {
 		fp1 = fp; fp2 = fp + offset;
 		for (j = 1; j <= vSize; j++) {
@@ -282,4 +282,27 @@ void Regress(Vector data, int vSize, int n, int step, int offset, int delwin, in
 		}
 		fp += step;
 	}
+}
+
+void RegressMat(Matrix* m, int delwin,int regressOrder)
+{
+	Vector v = NULL;
+	int dimOrigin = NumCols(*m), numFrames = NumRows(*m); int dimAfter = dimOrigin*(1+regressOrder);
+	int i = 0, j = 0;
+	
+	if (regressOrder == 0)return;
+
+//	printf("%d\t%d\n", NumRows(*m), NumCols(*m));
+	v = CreateVector(dimOrigin*numFrames*(regressOrder+1));
+	for(i=1;i<=numFrames;i++)for (j = 1; j <= dimOrigin; j++) v[j + dimAfter*(i - 1)] = (*m)[i][j];
+
+	for (i = 1; i <= regressOrder; i++) {
+		Regress(&v[1+(i-1)*dimOrigin], dimOrigin, numFrames, dimAfter, dimOrigin, delwin, 0, 0, 0);
+	}
+	FreeMatrix(*m);
+
+	*m = CreateMatrix(numFrames, dimAfter);
+//	printf("%d\t%d\n", NumRows(*m), NumCols(*m));
+	for (i = 1; i <= numFrames; i++)for (j = 1; j <= dimAfter; j++)  (*m)[i][j]= v[j + dimAfter*(i - 1)]  ;
+	FreeVector(v);
 }

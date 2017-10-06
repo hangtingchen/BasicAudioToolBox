@@ -10,6 +10,7 @@ extern "C" {
 
 #include <stdlib.h>
 #include <stdio.h>
+#include"hmath.h"
 typedef struct{
 double real;
 double imag;

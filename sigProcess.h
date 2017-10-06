@@ -41,7 +41,9 @@ double zeroCrossingRate(Vector s, int frameSize);
 
 /*计算差分系数*/
 /*参数分别为向量，需要差分的每帧的采样点数，帧数，每次移动的步长，差分系数和原信号的距离，0，0，是否简单差分*/
-void Regress(Vector data, int vSize, int n, int step, int offset, int delwin, int head, int tail, bool simpleDiffs);
+void Regress(double* data, int vSize, int n, int step, int offset, int delwin, int head, int tail, bool simpleDiffs);
+
+void RegressMat(Matrix* m,int delwin, int regressOrder);
 
 #ifdef __cplusplus
 }

@@ -23,13 +23,7 @@ void unpad_signal(Vector* yP, Vector x, int res, int target_sz );
 Matrix frameRawSignal(IntVec v, int wlen, int inc,double preEmphasiseCoefft,int enableHamWindow);
 
 
-void FFT(Vector s, int invert);
-/*
-When called s holds nn complex values stored in the
-sequence   [ r1 , i1 , r2 , i2 , .. .. , rn , in ] where
-n = VectorSize(s) DIV 2, n must be a power of 2. On exit s
-holds the fft (or the inverse fft if invert == 1)
-*/
+
 
 /*---------‘§¥¶¿Ì----------------*/
 /*zero mean a complete speech waveform nSamples long*/

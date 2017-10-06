@@ -26,6 +26,14 @@ void fft(int N, complex f[]);//傅立叶变换 输出也存在数组f中
 void ifft(int N, complex f[]); // 傅里叶逆变换  
 void c_abs(complex f[], double out[], int n);//复数数组取模  
 
+void FFT(Vector s, int invert);
+/*
+When called s holds nn complex values stored in the
+sequence   [ r1 , i1 , r2 , i2 , .. .. , rn , in ] where
+n = VectorSize(s) DIV 2, n must be a power of 2. On exit s
+holds the fft (or the inverse fft if invert == 1)
+*/
+
 #ifdef __cplusplus
 }
 #endif // __

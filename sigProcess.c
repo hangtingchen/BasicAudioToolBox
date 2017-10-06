@@ -166,22 +166,7 @@ void FFT(Vector s, int invert)
 }
 */
 
-void FFT(Vector s, int invert) {
-	int n = VectorSize(s); int i;
-	int nn = n / 2;
-	complex* x = (complex*)malloc(sizeof(complex)*nn);
-	for (i = 1; i <= nn; i++) {
-		x[i - 1].real = s[2 * i - 1];
-		x[i - 1].imag = s[2 * i];
-	}
-	if (invert)ifft(nn, x);
-	else fft(nn, x);
-	for (i = 1; i <= nn; i++) {
-		s[2 * i - 1] = x[i - 1].real;
-		s[2 * i] = x[i - 1].imag;
-	}
-	free(x);
-}
+
 
 void ZeroMean(IntVec data)
 {

@@ -31,6 +31,7 @@ BinaryFileStruct readBinaryFile(FILE * f)
 	int numDims = 0;
 	int i = 0; int j = 0;
 
+	//read information from 12 bytes in head
 	fread(&(bf.numFrames), 4, 1, f);
 	fread(&(bf.lengthFrame), 4, 1, f);
 	fread(&(bf.sizeFrameInByte), 2, 1, f);
@@ -39,6 +40,7 @@ BinaryFileStruct readBinaryFile(FILE * f)
 	//should change according to typeFlag
 	numDims = bf.sizeFrameInByte / 4;
 	m = CreateMatrix(bf.numFrames, numDims);
+	//read data
 	for (i = 1; i <= bf.numFrames; i++)for (j = 1; j <= numDims; j++) {
 		fread(&ftemp, 4, 1, f);
 		m[i][j] = (double)ftemp;

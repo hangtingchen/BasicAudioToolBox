@@ -30,6 +30,7 @@ void loadWAVEFile(WAVE_t * w, FILE * f)
 {
 	int numChannels = 0, numSamples = 0, i = 0, j = 0, t = 0, sign = 1; unsigned char* p = NULL; unsigned char p_temp; int int_temp = 0;
 	if (w->myEndian)printf("warning: your system may be big-endian,use loadWAVEFile2 instead.\n");
+	char useless = '\0';
 	//RIFF chunk
 	fread(w->RIFF.ckID, 4, 1, f);
 	fread(&w->RIFF.cksize, sizeof(uint32_t), 1, f);
@@ -44,8 +45,13 @@ void loadWAVEFile(WAVE_t * w, FILE * f)
 	fread(&w->fmt.nBlockAlign, sizeof(uint16_t), 1, f);
 	fread(&w->fmt.wBitsPerSample, sizeof(uint16_t), 1, f);
 	//data chunk
-	fread(w->DATA.ckID, 4, 1, f);
-	fread(&w->DATA.cksize, sizeof(uint32_t), 1, f);
+	do {
+		fread(w->DATA.ckID, 4, 1, f);
+		fread(&w->DATA.cksize, sizeof(uint32_t), 1, f);
+		if (w->DATA.ckID[0] != 'd' || w->DATA.ckID[1] != 'a') {
+			for (i = 0; i < w->DATA.cksize; i++)fread(&useless, 1, 1,f);
+		}
+	} while (w->DATA.ckID[0] != 'd' || w->DATA.ckID[1] != 'a');
 	//WAVEParams cal
 	numChannels = w->WAVEParams.numChannels = (int)w->fmt.nChannels;
 	w->WAVEParams.sampleRate = (int)w->fmt.nSamplesPerSec;

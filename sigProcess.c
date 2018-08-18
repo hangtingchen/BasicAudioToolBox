@@ -254,7 +254,7 @@ void calSubBankE(Vector fftx, Vector subBankEnergy)
 
 }
 
-void Regress(double* data, int vSize, int n, int step, int offset, int delwin, int head, int tail, bool simpleDiffs)
+void Regress(double* data, int vSize, int n, int step, int offset, int delwin, int head, int tail, int simpleDiffs)
 {
 	double *fp, *fp1, *fp2, *back, *forw;
 	double sum, sigmaT2;
@@ -305,4 +305,74 @@ void RegressMat(Matrix* m, int delwin,int regressOrder)
 //	printf("%d\t%d\n", NumRows(*m), NumCols(*m));
 	for (i = 1; i <= numFrames; i++)for (j = 1; j <= dimAfter; j++)  (*m)[i][j]= v[j + dimAfter*(i - 1)]  ;
 	FreeVector(v);
+}
+
+void NormaliseLogEnergy(double *data, int n, int step, double silFloor, double escale)
+{
+	double *p, max, min;
+	int i;
+
+	/* find max log energy */
+	p = data; max = *p;
+	for (i = 1; i<n; i++) {
+		p += step;                   /* step p to next e val */
+		if (*p > max) max = *p;
+	}
+	min = max - (silFloor*log(10.0)) / 10.0;  /* set the silence floor */
+											  /* normalise */
+	p = data;
+	for (i = 0; i<n; i++) {
+		if (*p < min) *p = min;          /* clamp to silence floor */
+		*p = 1.0 - (max - *p) * escale;  /* normalise */
+		p += step;
+	}
+}
+
+/*Z-normalization, Not tested */
+void ZNormalize(double * data, int vSize, int n, int step)
+{
+	double sum1,sum2;
+	double *fp, sd,mean;
+	int i,j;
+	for (i = 0; i < vSize; i++) {
+		sum1 = 0.0;sum2=0.0;
+		fp = data + i;
+		for (j = 0; j < n; j++) { sum1+=(*fp);sum2 += (*fp)*(*fp); fp += step; }
+		mean=sum1/(double)n;
+		sd = sqrt(sum2 / (double)n-mean*mean);
+		fp = data + i;
+		for (j = 0; j < n; j++) {
+			*fp = ((*fp)-mean)/sd; fp += step;
+		}
+	}
+}
+
+static int hamWinSize = 0;          /* Size of current Hamming window */
+static Vector hamWin = NULL;        /* Current Hamming window */
+
+/* GenHamWindow: generate precomputed Hamming window function */
+void GenHamWindow(int frameSize)
+{
+	int i;
+	double a;
+
+	if (hamWin == NULL || VectorSize(hamWin) < frameSize)
+		hamWin = CreateVector(frameSize);
+	a = 2 * pi / (frameSize - 1);
+	for (i = 1; i <= frameSize; i++)
+		hamWin[i] = 0.54 - 0.46 * cos(a*(i - 1));
+	hamWinSize = frameSize;
+}
+
+/* EXPORT->Ham: Apply Hamming Window to Speech frame s */
+void Ham(Vector s)
+{
+	int i, frameSize;
+	frameSize = VectorSize(s);
+	if (hamWinSize != frameSize)
+		GenHamWindow(frameSize);
+	for (i = 1; i <= frameSize; i++) {
+		s[i] *= hamWin[i];
+		//		printf("%d %f\n", i,s[i]);
+	}
 }

@@ -4,13 +4,15 @@
 #ifndef _FFT_H
 #define _FFT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif // !__cplusplus
 
-#include <stdlib.h>
-#include <stdio.h>
-#include"hmath.h"
+#include <cstdlib>
+#include <cstdio>
+#include "hmath.h"
+
+using namespace hmath;
+
+namespace hFFT{
+
 typedef struct{
 double real;
 double imag;
@@ -35,8 +37,6 @@ n = VectorSize(s) DIV 2, n must be a power of 2. On exit s
 holds the fft (or the inverse fft if invert == 1)
 */
 
-#ifdef __cplusplus
 }
-#endif // __
 
 #endif

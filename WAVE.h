@@ -2,9 +2,6 @@
 #ifndef _WAVE_H_
 #define _WAVE_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif // _cplusplus
 
 #ifdef _MSC_VER  
 typedef __int32 int32_t; 
@@ -13,14 +10,18 @@ typedef __int64 int64_t;
 typedef unsigned __int64 uint64_t;  
 typedef unsigned __int16 uint16_t;
 #else 
-#include <stdint.h> 
+#include <cstdint> 
 #endif
 
 
-#include<stdlib.h>
-#include<stdio.h>
-#include<string.h>
+#include<cstdlib>
+#include<cstdio>
+#include<cstring>
 #include "hmath.h"
+
+using namespace hmath;
+
+namespace hWAVE {
 
 /*RIFF chunk*/
 typedef struct {
@@ -89,8 +90,6 @@ void free_WAVE(WAVE_t* w);
 /*Ð´ÈëWAVEÎÄ¼þ*/
 void writeWaveFile(FILE* f, WAVEParams_t params, IntMat m);
 
-#ifdef __cplusplus
 }
-#endif // _cplusplus
 
 #endif // !_WAVE_H_

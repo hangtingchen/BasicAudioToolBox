@@ -1,17 +1,16 @@
 #pragma once
-#define _CRT_SECURE_NO_WARNINGS
 #ifndef _SIGPROCESS_H_
 #define _SIGPROCESS_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
 
-#include<math.h>
-#include<stdio.h>
-#include<stdlib.h>
+#include<cmath>
+#include<cstdio>
+#include<cstdlib>
 #include"hmath.h"
 
+using namespace hmath;
+
+namespace sigProcess {
 
 void circshift(Vector v, int shift);
 int find(Vector v, double thre, int FrontOrEndFlag);
@@ -54,8 +53,6 @@ void GenHamWindow(int frameSize);
 /*Apply Hamming Window to Speech frame s*/
 void Ham(Vector s);
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif // !_SIGPROCESS_H_

@@ -45,6 +45,15 @@ void Regress(double* data, int vSize, int n, int step, int offset, int delwin, i
 
 void RegressMat(Matrix* m,int delwin, int regressOrder);
 
+void NormaliseLogEnergy(double *data, int n, int step, double silFloor, double escale);
+
+void ZNormalize(double *data, int vSize, int n, int step);
+
+/* GenHamWindow: generate precomputed Hamming window function */
+void GenHamWindow(int frameSize);
+/*Apply Hamming Window to Speech frame s*/
+void Ham(Vector s);
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus

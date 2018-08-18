@@ -306,3 +306,78 @@ void RegressMat(Matrix* m, int delwin,int regressOrder)
 	for (i = 1; i <= numFrames; i++)for (j = 1; j <= dimAfter; j++)  (*m)[i][j]= v[j + dimAfter*(i - 1)]  ;
 	FreeVector(v);
 }
+
+void NormaliseLogEnergy(double *data, int n, int step, double silFloor, double escale)
+{
+	double *p, max, min;
+	int i;
+
+	/* find max log energy */
+	p = data; max = *p;
+	for (i = 1; i<n; i++) {
+		p += step;                   /* step p to next e val */
+		if (*p > max) max = *p;
+	}
+	min = max - (silFloor*log(10.0)) / 10.0;  /* set the silence floor */
+											  /* normalise */
+	p = data;
+	for (i = 0; i<n; i++) {
+		if (*p < min) *p = min;          /* clamp to silence floor */
+		*p = 1.0 - (max - *p) * escale;  /* normalise */
+		p += step;
+	}
+}
+
+/*Z-normalization, Not tested */
+void ZNormalize(double * data, int vSize, int n, int step)
+{
+	double sum1,sum2;
+	double *fp, sd,mean;
+	int i,j;
+	for (i = 0; i < vSize; i++) {
+		sum1 = 0.0;sum2=0.0;
+		fp = data + i;
+		for (j = 0; j < n; j++) { sum1+=(*fp);sum2 += (*fp)*(*fp); fp += step; }
+		mean=sum1/(double)n;
+		sd = sqrt(sum / (double)n-mean*mean);
+		fp = data + i;
+		for (j = 0; j < n; j++) {
+			*fp = ((*fp)-mean)/sd; fp += step;
+		}
+	}
+}
+
+
+/* EXPORT->Ham: Apply Hamming Window to Speech frame s */
+void Ham(Vector s)
+{
+	int i, frameSize;
+	frameSize = VectorSize(s);
+	if (hamWinSize != frameSize)
+		GenHamWindow(frameSize);
+	for (i = 1; i <= frameSize; i++) {
+		s[i] *= hamWin[i];
+		//		printf("%d %f\n", i,s[i]);
+	}
+}
+
+
+static int cepWinSize = 0;            /* Size of current cepstral weight window */
+static int cepWinL = 0;               /* Current liftering coeff */
+static Vector cepWin = NULL;        /* Current cepstral weight window */
+
+									/* GenCepWin: generate a new cep liftering vector */
+void GenCepWin(int cepLiftering, int count)
+{
+	int i;
+	double a, Lby2;
+
+	if (cepWin == NULL || VectorSize(cepWin) < count)
+		cepWin = CreateVector( count);
+	a = pi / cepLiftering;
+	Lby2 = cepLiftering / 2.0;
+	for (i = 1; i <= count; i++)
+		cepWin[i] = 1.0 + Lby2*sin(i * a);
+	cepWinL = cepLiftering;
+	cepWinSize = count;
+}

@@ -2,7 +2,7 @@
 #ifndef _WAVE_H_
 #define _WAVE_H_
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif // _cplusplus
 
@@ -89,7 +89,7 @@ void free_WAVE(WAVE_t* w);
 /*Ð´ÈëWAVEÎÄ¼þ*/
 void writeWaveFile(FILE* f, WAVEParams_t params, IntMat m);
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 }
 #endif // _cplusplus
 

@@ -254,7 +254,7 @@ void calSubBankE(Vector fftx, Vector subBankEnergy)
 
 }
 
-void Regress(double* data, int vSize, int n, int step, int offset, int delwin, int head, int tail, bool simpleDiffs)
+void Regress(double* data, int vSize, int n, int step, int offset, int delwin, int head, int tail, int simpleDiffs)
 {
 	double *fp, *fp1, *fp2, *back, *forw;
 	double sum, sigmaT2;

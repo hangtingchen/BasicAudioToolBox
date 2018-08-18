@@ -1,4 +1,5 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #ifndef _SIGPROCESS_H_
 #define _SIGPROCESS_H_
 

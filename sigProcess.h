@@ -52,7 +52,7 @@ void ZNormalize(double *data, int vSize, int n, int step);
 /* GenHamWindow: generate precomputed Hamming window function */
 Vector GenHamWindow(int frameSize);
 /*Apply Hamming Window to Speech frame s*/
-void Ham(Vector s);
+void Ham(Vector s, Vector hamWin, int hamWinSize);
 
 #ifdef __cplusplus
 }

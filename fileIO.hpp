@@ -27,7 +27,7 @@ int numRowInFile(FILE* f);
 BinaryFileStruct readBinaryFile(FILE* f);
 
 /*Write binary file with 12 byte in head */
-void writeBinaryFile(FILE* f, BinaryFileStruct bf);
+void writeBinaryFile(FILE* f, BinaryFileStruct bf, hmath::Vector optionVec=nullptr);
 
 }
 

@@ -52,7 +52,7 @@ hfileIO::BinaryFileStruct hfileIO::readBinaryFile(FILE * f)
 	return bf;
 }
 
-void hfileIO::writeBinaryFile(FILE* f, hfileIO::BinaryFileStruct bf)
+void hfileIO::writeBinaryFile(FILE* f, hfileIO::BinaryFileStruct bf, Vector optionVec)
 {
 	double dtemp = 0; float ftemp = 0;
 	int i = 0; int j = 0;
@@ -63,8 +63,24 @@ void hfileIO::writeBinaryFile(FILE* f, hfileIO::BinaryFileStruct bf)
 	fwrite(&(bf.sizeFrameInByte), 2, 1, f);
 	fwrite(&(bf.typeFlag), 2, 1, f);
 //	printf("%d\t%d\n", NumCols(bf.data), NumRows(bf.data));
-	for (i = 1; i <= bf.numFrames; i++)for (j = 1; j <= numDims; j++) {
-		ftemp = (double)bf.data[i][j];
-		fwrite(&ftemp, 4, 1, f);
+	if (optionVec) {
+		if (VectorSize(optionVec) != (numDims*bf.numFrames)) {
+			printf("Unmatched size %d %d %d", VectorSize(optionVec), numDims, bf.numFrames);
+			exit(1);
+		}
+		for (i = 0; i < bf.numFrames; i++)for (j = 0; j < numDims; j++) {
+			ftemp = (float)optionVec[numDims*i + j + 1];
+			fwrite(&ftemp, 4, 1, f);
+		}
+	}
+	else {
+		if (NumRows(bf.data) != bf.numFrames || NumCols(bf.data) != numDims) {
+			printf("Unmatched size %d %d %d %d",NumRows(bf.data), bf.numFrames, NumCols(bf.data), numDims);
+			exit(1);
+		}
+		for (i = 1; i <= bf.numFrames; i++)for (j = 1; j <= numDims; j++) {
+			ftemp = (float)bf.data[i][j];
+			fwrite(&ftemp, 4, 1, f);
+		}
 	}
 }

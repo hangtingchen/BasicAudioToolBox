@@ -62,7 +62,7 @@ void writeBinaryFile(FILE* f, BinaryFileStruct bf)
 	fwrite(&(bf.typeFlag), 2, 1, f);
 //	printf("%d\t%d\n", NumCols(bf.data), NumRows(bf.data));
 	for (i = 1; i <= bf.numFrames; i++)for (j = 1; j <= numDims; j++) {
-		ftemp = (double)bf.data[i][j];
+		ftemp = (float)bf.data[i][j];
 		fwrite(&ftemp, 4, 1, f);
 	}
 }

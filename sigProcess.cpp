@@ -1,7 +1,9 @@
-#include "sigProcess.h"
+#include "sigProcess.hpp"
+
+using namespace hmath;
 
 /*circle shift the signal*/
-void circshift(Vector v, int shift)
+void hsigProcess::circshift(Vector v, int shift)
 {
 	int i = 1; Vector v_temp = CreateVector(VectorSize(v));
 	if (shift < 0)do { shift += VectorSize(v); } while (shift < 0);
@@ -13,7 +15,7 @@ void circshift(Vector v, int shift)
 }
 
 /*find the first index of abs|sample| exceeding the thre from the front or end*/
-int find(Vector v, double thre, int FrontOrEndFlag)
+int hsigProcess::find(Vector v, double thre, int FrontOrEndFlag)
 {
 	int i; int m = 0;
 	if (FrontOrEndFlag == 1) {
@@ -28,7 +30,7 @@ int find(Vector v, double thre, int FrontOrEndFlag)
 		return 0;
 }
 
-void pad_signal(Vector * yP, Vector x, int Npad)
+void hsigProcess::pad_signal(Vector * yP, Vector x, int Npad)
 {
 	int i = 0; int j = 0;
 	int orig_sz = VectorSize (x);
@@ -66,7 +68,7 @@ void pad_signal(Vector * yP, Vector x, int Npad)
 	FreeIntVec(ind0); FreeIntVec(conjugate0); FreeIntVec(conjugate); FreeIntVec(ind); FreeIntVec(src); FreeIntVec(dst);
 }
 
-void unpad_signal(Vector * yP, Vector x, int res, int target_sz)
+void hsigProcess::unpad_signal(Vector * yP, Vector x, int res, int target_sz)
 {
 	int i = 0;
 	int padded_sz = VectorSize(x);
@@ -77,7 +79,7 @@ void unpad_signal(Vector * yP, Vector x, int res, int target_sz)
 	for (i = 1; i <= VectorSize(*yP); i++)(*yP)[i] = x[i];
 }
 
-Matrix frameRawSignal(IntVec v, int wlen, int inc, double preEmphasiseCoefft, int enableHamWindow)
+Matrix hsigProcess::frameRawSignal(IntVec v, int wlen, int inc, double preEmphasiseCoefft, int enableHamWindow)
 {
 	int numSamples = VectorSize(v);
 	int numFrames = (numSamples - (wlen - inc)) / inc;
@@ -87,7 +89,7 @@ Matrix frameRawSignal(IntVec v, int wlen, int inc, double preEmphasiseCoefft, in
 
 	v1 = CreateVector(numSamples);
 	for (i = 1; i <= numSamples; i++)v1[i] = (double)v[i];
-	PreEmphasise(v1, preEmphasiseCoefft);
+	hsigProcess::PreEmphasise(v1, preEmphasiseCoefft);
 
 	HamWindow = CreateVector(wlen);
 	a = 2 * pi / (wlen - 1);
@@ -168,7 +170,7 @@ void FFT(Vector s, int invert)
 
 
 
-void ZeroMean(IntVec data)
+void hsigProcess::ZeroMean(IntVec data)
 {
 	long i, hiClip = 0, loClip = 0;
 	int *x;
@@ -196,14 +198,14 @@ void ZeroMean(IntVec data)
 		printf("ZeroMean: %d samples too +ve\n", hiClip);
 }
 
-double zeroCrossingRate(Vector s, int frameSize) {
+double hsigProcess::zeroCrossingRate(Vector s, int frameSize) {
 	int count = 0; int i;
 	for (i = 1; i < frameSize; i++)  if ((s[i] * s[i + 1]) < 0.0)count++;
 	return (double)count / (double)(frameSize - 1);
 }
 
 /* EXPORT->PreEmphasise: pre-emphasise signal in s */
-void PreEmphasise(Vector s, double k)
+void hsigProcess::PreEmphasise(Vector s, double k)
 {
 	int i;
 	double preE;
@@ -215,7 +217,7 @@ void PreEmphasise(Vector s, double k)
 	s[1] *= 1.0 - preE;
 }
 
-double calBrightness(Vector fftx)
+double hsigProcess::calBrightness(Vector fftx)
 {
 	int i;
 	double sum = 0.0;
@@ -232,7 +234,7 @@ double calBrightness(Vector fftx)
 }
 
 
-void calSubBankE(Vector fftx, Vector subBankEnergy)
+void hsigProcess::calSubBankE(Vector fftx, Vector subBankEnergy)
 {
 	int i;
 	int numBank = VectorSize(subBankEnergy); int bankSize = (int)VectorSize(fftx) / (2 * numBank);
@@ -254,7 +256,7 @@ void calSubBankE(Vector fftx, Vector subBankEnergy)
 
 }
 
-void Regress(double* data, int vSize, int n, int step, int offset, int delwin, int head, int tail, int simpleDiffs)
+void hsigProcess::Regress(double* data, int vSize, int n, int step, int offset, int delwin, int head, int tail, int simpleDiffs)
 {
 	double *fp, *fp1, *fp2, *back, *forw;
 	double sum, sigmaT2;
@@ -284,7 +286,7 @@ void Regress(double* data, int vSize, int n, int step, int offset, int delwin, i
 	}
 }
 
-void RegressMat(Matrix* m, int delwin,int regressOrder)
+void hsigProcess::RegressMat(Matrix* m, int delwin,int regressOrder)
 {
 	Vector v = NULL;
 	int dimOrigin = NumCols(*m), numFrames = NumRows(*m); int dimAfter = dimOrigin*(1+regressOrder);
@@ -307,7 +309,7 @@ void RegressMat(Matrix* m, int delwin,int regressOrder)
 	FreeVector(v);
 }
 
-void NormaliseLogEnergy(double *data, int n, int step, double silFloor, double escale)
+void hsigProcess::NormaliseLogEnergy(double *data, int n, int step, double silFloor, double escale)
 {
 	double *p, max, min;
 	int i;
@@ -329,7 +331,7 @@ void NormaliseLogEnergy(double *data, int n, int step, double silFloor, double e
 }
 
 /*Z-normalization, Not tested */
-void ZNormalize(double * data, int vSize, int n, int step)
+void hsigProcess::ZNormalize(double * data, int vSize, int n, int step)
 {
 	double sum1,sum2;
 	double *fp, sd,mean;
@@ -348,7 +350,7 @@ void ZNormalize(double * data, int vSize, int n, int step)
 }
 
 /* GenHamWindow: generate precomputed Hamming window function */
-Vector GenHamWindow(int frameSize)
+Vector hsigProcess::GenHamWindow(int frameSize)
 {
 	int i;
 	double a;
@@ -361,12 +363,12 @@ Vector GenHamWindow(int frameSize)
 }
 
 /* EXPORT->Ham: Apply Hamming Window to Speech frame s */
-void Ham(Vector s, Vector hamWin,int hamWinSize)
+void hsigProcess::Ham(Vector s, Vector hamWin,int hamWinSize)
 {
 	int i, frameSize;
 	frameSize = VectorSize(s);
 	if (hamWinSize != frameSize)
-		GenHamWindow(frameSize);
+		hsigProcess::GenHamWindow(frameSize);
 	for (i = 1; i <= frameSize; i++) {
 		s[i] *= hamWin[i];
 		//		printf("%d %f\n", i,s[i]);

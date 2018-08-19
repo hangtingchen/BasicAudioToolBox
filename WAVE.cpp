@@ -1,10 +1,10 @@
-#include "WAVE.h"
+#include "WAVE.hpp"
 
+using namespace hmath;
 
-
-WAVE_t initWAVE_t()
+hWAVE::WAVE_t hWAVE::initWAVE_t()
 {
-	WAVE_t w={{ '\x0',-1,'\x0' },{ '\x0',-1,-1,-1,-1,-1,-1,-1 },{ '\x0',-1,NULL },{ -1,-1,-1,-1,-1 },0};
+	hWAVE::WAVE_t w={{ '\x0',-1,'\x0' },{ '\x0',-1,-1,-1,-1,-1,-1,-1 },{ '\x0',-1,NULL },{ -1,-1,-1,-1,-1 },0};
 	union {
 		uint32_t i;
 		char c[4];
@@ -14,7 +14,7 @@ WAVE_t initWAVE_t()
 }
 
 //warning:read only non-negtive int
-long int readWAVE(FILE * f, size_t sizeInByte, int EndianFlag)
+long int hWAVE::readWAVE(FILE * f, size_t sizeInByte, int EndianFlag)
 {
 	char* p = NULL; int i = 0; long int x = 0;
 	if (sizeInByte > sizeof(long int)) { printf("Overflow when loading file\n"); exit(-1); }
@@ -26,7 +26,7 @@ long int readWAVE(FILE * f, size_t sizeInByte, int EndianFlag)
 	return x;
 }
 
-void loadWAVEFile(WAVE_t * w, FILE * f)
+void hWAVE::loadWAVEFile(hWAVE::WAVE_t * w, FILE * f)
 {
 	int numChannels = 0, numSamples = 0, i = 0, j = 0, t = 0, sign = 1; unsigned char* p = NULL; unsigned char p_temp; int int_temp = 0;
 	if (w->myEndian)printf("warning: your system may be big-endian,use loadWAVEFile2 instead.\n");
@@ -77,34 +77,15 @@ void loadWAVEFile(WAVE_t * w, FILE * f)
 	free(p);
 }
 
-//this function for both little and big endian is not finished. 
-//Most systems are little endian. When WAVE_t.myEndian==0,feel free to use loadWAVEFile.
-void loadWAVEFile2(WAVE_t * w, FILE * f)
-{
-	//RIFF chunk
-	fread(w->RIFF.ckID, 4, 1, f);
-	w->RIFF.cksize = (uint32_t)readWAVE(f, sizeof(uint32_t), 0);
-	fread(w->RIFF.WAVEID, 4, 1, f);
-	//fmt chunk
-	fread(w->fmt.ckID, 4, 1, f);
-	w->fmt.cksize = (uint32_t)readWAVE(f, sizeof(uint32_t), 0);
-	w->fmt.wFormatTag = (uint16_t)readWAVE(f, sizeof(uint16_t), 0);
-	w->fmt.nChannels = (uint16_t)readWAVE(f, sizeof(uint16_t), 0);
-	w->fmt.nSamplesPerSec = (uint32_t)readWAVE(f, sizeof(uint32_t), 0);
-	w->fmt.nAvgBytesPerSec = (uint32_t)readWAVE(f, sizeof(uint32_t), 0);
-	w->fmt.nBlockAlign = (uint16_t)readWAVE(f, sizeof(uint16_t), 0);
-	w->fmt.wBitsPerSample = (uint16_t)readWAVE(f, sizeof(uint16_t), 0);
-	//data chunk
 
-}
 
-int WAVEParamsCheck(WAVEParams_t w1, WAVEParams_t w2)
+int hWAVE::WAVEParamsCheck(hWAVE::WAVEParams_t w1, hWAVE::WAVEParams_t w2)
 {
 	if (w1.containerLengthInByte == w2.containerLengthInByte&&w1.numChannels == w2.numChannels&&w1.numSamples == w2.numSamples&&w1.sampleLengthInByte == w2.sampleLengthInByte&&w1.sampleRate == w2.sampleRate)return 1;
 	else return 0;
 }
 
-void print_WAVE(WAVE_t w)
+void hWAVE::print_WAVE(hWAVE::WAVE_t w)
 {
 	printf("Sample Rate : %d\n", w.WAVEParams.sampleRate);
 	printf("Number of channels : %d\n", w.WAVEParams.numChannels);
@@ -113,16 +94,16 @@ void print_WAVE(WAVE_t w)
 	printf("Number of samples : %d\n", w.WAVEParams.numSamples);
 }
 
-void free_WAVE(WAVE_t * w)
+void hWAVE::free_WAVE(hWAVE::WAVE_t * w)
 {
-	FreeMatrix(w->DATA.data);
+	FreeMatrix((Matrix)w->DATA.data);
 	*w = initWAVE_t();
 }
 
-void writeWaveFile(FILE * f, WAVEParams_t params, IntMat m)
+void hWAVE::writeWaveFile(FILE * f, hWAVE::WAVEParams_t params, IntMat m)
 {
 	int i = 0, j = 0, t = 0; int pad_byte = 0; unsigned char* p = NULL; int sign = 0; int int_temp = 0;
-	WAVE_t w = initWAVE_t();
+	hWAVE::WAVE_t w = initWAVE_t();
 	char RIFF_ckID[4] = { 'R','I','F','F' };
 	char WAVEID[4] = { 'W','A','V','E' };
 	char fmt_ckID[4] = { 'f','m','t','\x20' };

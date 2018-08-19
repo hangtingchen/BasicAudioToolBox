@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _WAVE_H_
-#define _WAVE_H_
+#ifndef _WAVE_HPP_
+#define _WAVE_HPP_
 
 
 #ifdef _MSC_VER  
@@ -17,9 +17,7 @@ typedef unsigned __int16 uint16_t;
 #include<cstdlib>
 #include<cstdio>
 #include<cstring>
-#include "hmath.h"
-
-using namespace hmath;
+#include "hmath.hpp"
 
 namespace hWAVE {
 
@@ -88,7 +86,7 @@ void print_WAVE(WAVE_t w);
 void free_WAVE(WAVE_t* w);
 
 /*Ð´ÈëWAVEÎÄ¼þ*/
-void writeWaveFile(FILE* f, WAVEParams_t params, IntMat m);
+void writeWaveFile(FILE* f, WAVEParams_t params, hmath::IntMat m);
 
 }
 

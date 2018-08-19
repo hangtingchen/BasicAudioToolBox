@@ -1,4 +1,4 @@
-#include "hmath.h"
+#include "hmath.hpp"
 
 //XFFT
 

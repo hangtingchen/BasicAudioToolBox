@@ -1,6 +1,8 @@
-#include"fileIO.h"
+#include"fileIO.hpp"
 
-void FreeBinaryFileStruct(BinaryFileStruct * bfp)
+using namespace hmath;
+
+void hfileIO::FreeBinaryFileStruct(hfileIO::BinaryFileStruct * bfp)
 {
 	bfp->lengthFrame = -1;
 	bfp->numFrames = -1;
@@ -10,7 +12,7 @@ void FreeBinaryFileStruct(BinaryFileStruct * bfp)
 	bfp->data = NULL;
 }
 
-int numRowInFile(FILE* f) {
+int hfileIO::numRowInFile(FILE* f) {
 	int c; int i = 0;
 	while ((c = fgetc(f)) != EOF)
 	{
@@ -22,12 +24,12 @@ int numRowInFile(FILE* f) {
 	return i;
 }
 
-BinaryFileStruct readBinaryFile(FILE * f)
+hfileIO::BinaryFileStruct hfileIO::readBinaryFile(FILE * f)
 {
 	double dtemp = 0; float ftemp = 0;
 	Matrix m = NULL; 
 	//no matter the origin params is int or short int,set these params to int for they are no-negtive
-	BinaryFileStruct bf = {0,0,0,0,NULL};
+	hfileIO::BinaryFileStruct bf = {0,0,0,0,NULL};
 	int numDims = 0;
 	int i = 0; int j = 0;
 
@@ -50,7 +52,7 @@ BinaryFileStruct readBinaryFile(FILE * f)
 	return bf;
 }
 
-void writeBinaryFile(FILE* f, BinaryFileStruct bf)
+void hfileIO::writeBinaryFile(FILE* f, hfileIO::BinaryFileStruct bf)
 {
 	double dtemp = 0; float ftemp = 0;
 	int i = 0; int j = 0;

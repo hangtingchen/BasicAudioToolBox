@@ -1,9 +1,11 @@
 ﻿#include <math.h>
-#include "fft.h"
-#include"hmath.h"
+#include "fft.hpp"
+#include"hmath.hpp"
 //精度0.0001弧度  
 
-void conjugate_complex(int n, complex in[], complex out[])
+using namespace hmath;
+
+void hFFT::conjugate_complex(int n, hFFT::complex in[], hFFT::complex out[])
 {
 	int i  = 0;
 	for (i = 0; i<n; i++)
@@ -13,7 +15,7 @@ void conjugate_complex(int n, complex in[], complex out[])
 	}
 }
 
-void c_abs(complex f[], double out[], int n)
+void hFFT::c_abs(hFFT::complex f[], double out[], int n)
 {
 	int i  = 0;
 	double t;
@@ -25,33 +27,32 @@ void c_abs(complex f[], double out[], int n)
 }
 
 
-void c_plus(complex a, complex b, complex *c)
+void hFFT::c_plus(hFFT::complex a, hFFT::complex b, hFFT::complex *c)
 {
 	c->real  = a.real  + b.real;
 	c->imag  = a.imag  + b.imag;
 }
 
-void c_sub(complex a, complex b, complex *c)
+void hFFT::c_sub(hFFT::complex a, hFFT::complex b, hFFT::complex *c)
 {
 	c->real  = a.real  - b.real;
 	c->imag  = a.imag  - b.imag;
 }
 
-void c_mul(complex a, complex b, complex *c)
+void hFFT::c_mul(hFFT::complex a, hFFT::complex b, hFFT::complex *c)
 {
 	c->real  = a.real * b.real  - a.imag * b.imag;
 	c->imag  = a.real * b.imag  + a.imag * b.real;
 }
 
-void c_div(complex a, complex b, complex *c)
+void hFFT::c_div(hFFT::complex a, hFFT::complex b, hFFT::complex *c)
 {
 	c->real  = (a.real * b.real  + a.imag * b.imag) / (b.real * b.real  + b.imag * b.imag);
 	c->imag  = (a.imag * b.real  - a.real * b.imag) / (b.real * b.real  + b.imag * b.imag);
 }
 
-#define SWAP(a, b)  tempr = (a); (a) = (b); (b) = tempr  
 
-void Wn_i(int n, int i, complex *Wn, char flag)
+void hFFT::Wn_i(int n, int i, hFFT::complex *Wn, char flag)
 {
 	Wn->real  = cos(2 * PI*i / n);
 	if (flag  == 1)
@@ -61,9 +62,9 @@ void Wn_i(int n, int i, complex *Wn, char flag)
 }
 
 //傅里叶变化  
-void fft(int N, complex f[])
+void hFFT::fft(int N, hFFT::complex f[])
 {
-	complex t, wn;//中间变量  
+	hFFT::complex t, wn;//中间变量  
 	int i, j, k, m, n, l, r, M;
 	int la, lb, lc;
 	  /*----计算分解的级数M=Log2(N)----*/  
@@ -109,7 +110,7 @@ void fft(int N, complex f[])
 }
 
 //傅里叶逆变换  
-void ifft(int N, complex f[])
+void hFFT::ifft(int N, hFFT::complex f[])
 {
 	int i = 0;
 	conjugate_complex(N, f, f);
@@ -122,10 +123,10 @@ void ifft(int N, complex f[])
 	}
 }
 
-void FFT(Vector s, int invert) {
+void hFFT::FFT(Vector s, int invert) {
 	int n = VectorSize(s); int i;
 	int nn = n / 2;
-	complex* x = (complex*)malloc(sizeof(complex)*nn);
+	hFFT::complex* x = (hFFT::complex*)malloc(sizeof(hFFT::complex)*nn);
 	for (i = 1; i <= nn; i++) {
 		x[i - 1].real = s[2 * i - 1];
 		x[i - 1].imag = s[2 * i];

@@ -1,13 +1,10 @@
 #pragma once
-#ifndef  _FILEIO_H
-#define _FILEIO_H
+#ifndef  _FILEIO_HPP_
+#define _FILEIO_HPP_
 
 
 #include<cstdio>
-#include"hmath.h"
-
-
-using namespace hmath;
+#include"hmath.hPP"
 
 namespace hfileIO {
 
@@ -18,7 +15,7 @@ typedef struct
 	int lengthFrame;
 	short sizeFrameInByte;
 	short typeFlag;
-	Matrix data;
+	hmath::Matrix data;
 }BinaryFileStruct;
 
 void FreeBinaryFileStruct(BinaryFileStruct* bfp);

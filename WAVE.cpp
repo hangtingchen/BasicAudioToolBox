@@ -66,13 +66,20 @@ void hWAVE::loadWAVEFile(hWAVE::WAVE_t * w, FILE * f)
 	for (i = 1; i <= numSamples; i++)
 		for (j = 1; j <= numChannels; j++) {
 			fread(p, w->WAVEParams.containerLengthInByte, 1, f);
-			p_temp = p[w->WAVEParams.sampleLengthInByte - 1];
-			if (p_temp >> 7)sign = -1; else sign = 1;
-			if (sign == -1) { for (t = 0; t < w->WAVEParams.sampleLengthInByte; t++)p[t] = ~p[t];}
-			int_temp = 0; memcpy(&int_temp, p, w->WAVEParams.sampleLengthInByte);
-			if (sign == -1)int_temp += 1;
-	//		for (t = w->WAVEParams.sampleLengthInByte - 1; t >= 0; t--) w->DATA.data[j][i] = (int)(w->DATA.data[j][i] * 256 + (int)(unsigned int)p[t]);
-			w->DATA.data[j][i] = sign*int_temp;
+			if (w->WAVEParams.containerLengthInByte != 2) {
+				p_temp = p[w->WAVEParams.sampleLengthInByte - 1];
+				if (p_temp >> 7)sign = -1; else sign = 1;
+				if (sign == -1) { for (t = 0; t < w->WAVEParams.sampleLengthInByte; t++)p[t] = ~p[t]; }
+				int_temp = 0; memcpy(&int_temp, p, w->WAVEParams.sampleLengthInByte);
+				if (sign == -1)int_temp += 1;
+				//		for (t = w->WAVEParams.sampleLengthInByte - 1; t >= 0; t--) w->DATA.data[j][i] = (int)(w->DATA.data[j][i] * 256 + (int)(unsigned int)p[t]);
+				w->DATA.data[j][i] = sign * int_temp;
+			}
+			//if input is 8bit there is no negative amplitude
+			else {
+				memcpy(&int_temp, p, w->WAVEParams.sampleLengthInByte);
+				w->DATA.data[j][i] = int_temp;
+			}
 	}
 	free(p);
 }

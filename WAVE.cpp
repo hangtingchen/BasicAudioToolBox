@@ -4,7 +4,7 @@ using namespace hmath;
 
 hWAVE::WAVE_t hWAVE::initWAVE_t()
 {
-	hWAVE::WAVE_t w={{ '\x0',-1,'\x0' },{ '\x0',-1,-1,-1,-1,-1,-1,-1 },{ '\x0',-1,NULL },{ -1,-1,-1,-1,-1 },0};
+	hWAVE::WAVE_t w={{ '\x0',0,'\x0' },{ '\x0',0,0,0,0,0,0,0 },{ '\x0',0,NULL },{ 0,0,0,0,0 },0};
 	union {
 		uint32_t i;
 		char c[4];

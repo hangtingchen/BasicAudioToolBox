@@ -29,6 +29,7 @@ void fft(int N, complex f[]);//傅立叶变换 输出也存在数组f中
 void ifft(int N, complex f[]); // 傅里叶逆变换  
 void c_abs(complex f[], double out[], int n);//复数数组取模  
 
+void Wn_i(int n, int i, hFFT::complex *Wn, char flag);
 void FFT(hmath::Vector s, int invert);
 /*
 When called s holds nn complex values stored in the

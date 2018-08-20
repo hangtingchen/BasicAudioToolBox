@@ -4,7 +4,7 @@
 
 
 #include<cstdio>
-#include"hmath.hPP"
+#include"hmath.hpp"
 
 namespace hfileIO {
 

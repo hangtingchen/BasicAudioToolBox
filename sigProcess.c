@@ -172,28 +172,20 @@ void ZeroMean(IntVec data)
 {
 	long i, hiClip = 0, loClip = 0;
 	int *x;
-	double sum = 0.0, y, mean;
+	int *x; int meanint = 0;
+	double sum = 0.0, mean;
 	int nSamples = VectorSize(data);
 
 	x = &data[1];
 	for (i = 0; i<nSamples; i++, x++)
 		sum += *x;
 	mean = sum / (double)nSamples;
-	x = data;
-	for (i = 0; i<nSamples; i++, x++) {
-		y = (double)(*x) - mean;
-		if (y<-32767.0) {
-			y = -32767.0; ++loClip;
-		}
-		if (y>32767.0) {
-			y = 32767.0; ++hiClip;
-		}
-		*x = (int)((y>0.0) ? y + 0.5 : y - 0.5);
-	}
-	if (loClip>0)
-		printf("ZeroMean: %d samples too -ve\n", loClip);
-	if (hiClip>0)
-		printf("ZeroMean: %d samples too +ve\n", hiClip);
++       meanint = (int)((mean > 0.0) ? mean + 0.5 : mean - 0.5);
++       if (meanint != 0) {
++               printf("The mean of signal is %d\n It is meaned to zero\n", meanint);
++               for (i = 1; i <= nSamples; i++, x++) {
++                       data[i] = data[i] - meanint;
+
 }
 
 double zeroCrossingRate(Vector s, int frameSize) {

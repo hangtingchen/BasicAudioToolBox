@@ -18,6 +18,7 @@ typedef struct
 	hmath::Matrix data;
 }BinaryFileStruct;
 
+/*释放二进制文件*/
 void FreeBinaryFileStruct(BinaryFileStruct* bfp);
 
 /*一个计算文件行数的函数，计算结束后，指针返回文件头处*/

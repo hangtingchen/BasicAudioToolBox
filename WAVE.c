@@ -66,7 +66,7 @@ void loadWAVEFile(WAVE_t * w, FILE * f)
 	for (i = 1; i <= numSamples; i++)
 		for (j = 1; j <= numChannels; j++) {
 			fread(p, w->WAVEParams.containerLengthInByte, 1, f);
-			if (w->WAVEParams.containerLengthInByte != 2) {
+			if (w->WAVEParams.containerLengthInByte != 1) {
 				p_temp = p[w->WAVEParams.sampleLengthInByte - 1];
 				if (p_temp >> 7)sign = -1; else sign = 1;
 				if (sign == -1) { for (t = 0; t < w->WAVEParams.sampleLengthInByte; t++)p[t] = ~p[t]; }

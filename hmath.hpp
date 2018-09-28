@@ -63,6 +63,7 @@ IntVec CreateIntVec(int n);	/*创建一个整形向量*/
 void FreeIntVec(IntVec v);
 void ShowIntVec(IntVec v);
 void WriteIntVec(FILE* f, IntVec v);	/*将一个向量储存到文件f中*/
+void LoadIntVec(FILE *f,IntVec v);
 void ZeroIntVec(IntVec v);
 void CopyIntVec(IntVec v1, IntVec v2);
 

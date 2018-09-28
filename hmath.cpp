@@ -93,6 +93,13 @@ void hmath::WriteIntVec(FILE * f, IntVec v)
 	fprintf(f, "\n");
 }
 
+void hmath::LoadIntVec(FILE *f,IntVec v)
+{
+	int size = VectorSize(v); int i = 0;
+	for (i = 1; i <= size; i++)fscanf(f, "%d\t", &v[i]);
+	fscanf(f, "\n");
+}
+
 void hmath::ZeroIntVec(IntVec v)
 {
 	int i, n;
@@ -256,12 +263,14 @@ void hmath::LoadVector(FILE * f, Vector v)
 	int i = 0;
 	int size = VectorSize(v);
 	for (i = 1; i <= size; i++)fscanf(f, "%lf\t", &v[i]);
+	fscanf(f, "\n");
 }
 
 void hmath::LoadVectorE(FILE * f, Vector v)
 {
 	int size = VectorSize(v); int i = 0;
 	for (i = 1; i <= size; i++)fscanf(f, "%le\t", &v[i]);
+	fscanf(f, "\n");
 }
 
 //SVector

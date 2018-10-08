@@ -320,9 +320,8 @@ hmath::Matrix hmath::CreateMatrix(int nrows, int ncols)
 	size_t vsize;
 	int *i, j;
 	Vector *m;
-	char *p;//ʹ��char����Ϊ���ǵ����ֽ�
+	char *p;
 	p = (char*)malloc(sizeof(double)*((ncols + 1)*nrows) + (nrows + 1) * sizeof(Vector));
-	//���е�һ����������,�����Ϊ����,������ĵ�һ�д�������
 	i = (int *)p; *i = nrows;
 	vsize = (ncols+1)*sizeof(double);
 	m = (Vector *)p;

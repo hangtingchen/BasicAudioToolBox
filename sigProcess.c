@@ -171,7 +171,6 @@ void FFT(Vector s, int invert)
 void ZeroMean(IntVec data)
 {
 	long i, hiClip = 0, loClip = 0;
-	int *x;
 	int *x; int meanint = 0;
 	double sum = 0.0, mean;
 	int nSamples = VectorSize(data);

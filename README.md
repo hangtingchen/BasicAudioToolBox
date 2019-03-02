@@ -2,6 +2,8 @@
 
 A basic audio toolbox for signal processing and statistic models
 
+## 我们建议使用masterCPlus分支（C++版本），master分支（C版本）可能未必能编译运行通过
+
 ## 文件
 | 文件        | 主要用于         |
 | ------------- |:-------------:|

@@ -180,11 +180,11 @@ void ZeroMean(IntVec data)
 	for (i = 0; i<nSamples; i++, x++)
 		sum += *x;
 	mean = sum / (double)nSamples;
-+       meanint = (int)((mean > 0.0) ? mean + 0.5 : mean - 0.5);
-+       if (meanint != 0) {
-+               printf("The mean of signal is %d\n It is meaned to zero\n", meanint);
-+               for (i = 1; i <= nSamples; i++, x++) {
-+                       data[i] = data[i] - meanint;
+        meanint = (int)((mean > 0.0) ? mean + 0.5 : mean - 0.5);
+        if (meanint != 0) {
+                printf("The mean of signal is %d\n It is meaned to zero\n", meanint);
+                for (i = 1; i <= nSamples; i++, x++) {
+                        data[i] = data[i] - meanint;
 
 }
 

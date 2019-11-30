@@ -184,7 +184,8 @@ void ZeroMean(IntVec data)
                 printf("The mean of signal is %d\n It is meaned to zero\n", meanint);
                 for (i = 1; i <= nSamples; i++, x++) {
                         data[i] = data[i] - meanint;
-
+		}
+	}
 }
 
 double zeroCrossingRate(Vector s, int frameSize) {
